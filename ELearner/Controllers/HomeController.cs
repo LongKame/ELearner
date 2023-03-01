@@ -81,9 +81,19 @@ namespace ELearner.Controllers
                         join j in learningEnglishContext.TestLearnings on i.Id equals j.LessonId
                         where j.LessonId == 1
                         select j).ToList();
-            var rand = new Random();
-            var selectedPost = list.Take(5).ToList();
+            var selectedPost = list.Take(10).ToList();
             return View(selectedPost);
+        }
+
+
+        public IActionResult SentenceStructure(int? id)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var list = (from i in learningEnglishContext.Lessons
+                        join j in learningEnglishContext.SentenceStructures on i.Id equals j.LessonId
+                        where j.LessonId == 1
+                        select j).ToList();
+            return View(list);
         }
 
         public IActionResult Mark(List<TestLearning> tl)
@@ -93,8 +103,7 @@ namespace ELearner.Controllers
                         join j in learningEnglishContext.TestLearnings on i.Id equals j.LessonId
                         where j.LessonId == 1
                         select j).ToList();
-            var rand = new Random();
-            var selectedPost = list.Take(5).ToList();
+            var selectedPost = list.Take(10).ToList();
             return RedirectToAction("Login");
         }
 

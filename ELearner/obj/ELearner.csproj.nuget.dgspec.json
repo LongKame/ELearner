@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Computer\\source\\repos\\ELearner\\ELearner\\ELearner.csproj": {}
+    "C:\\Users\\Computer\\Desktop\\ELearner\\ELearner\\ELearner.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Computer\\source\\repos\\ELearner\\ELearner\\ELearner.csproj": {
+    "C:\\Users\\Computer\\Desktop\\ELearner\\ELearner\\ELearner.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Computer\\source\\repos\\ELearner\\ELearner\\ELearner.csproj",
+        "projectUniqueName": "C:\\Users\\Computer\\Desktop\\ELearner\\ELearner\\ELearner.csproj",
         "projectName": "ELearner",
-        "projectPath": "C:\\Users\\Computer\\source\\repos\\ELearner\\ELearner\\ELearner.csproj",
+        "projectPath": "C:\\Users\\Computer\\Desktop\\ELearner\\ELearner\\ELearner.csproj",
         "packagesPath": "C:\\Users\\Computer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Computer\\source\\repos\\ELearner\\ELearner\\obj\\",
+        "outputPath": "C:\\Users\\Computer\\Desktop\\ELearner\\ELearner\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Computer\\AppData\\Roaming\\NuGet\\NuGet.Config",
