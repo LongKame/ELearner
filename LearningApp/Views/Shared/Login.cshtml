@@ -42,6 +42,10 @@
                                 <label for="remember" class="text-muted">Remember me</label>
                                 <a href="#" id="forgot" class="font-weight-bold">Forgot password?</a>
                             </div>
+                            @if (@ViewBag.NoAccount != null)
+                            {
+                                <h1>@ViewBag.NoAccount</h1>
+                            }
                             <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
                             <div class="text-center pt-4 text-muted">
                                 Don't have an account? <a href="/Home/SignUp">Sign up</a>

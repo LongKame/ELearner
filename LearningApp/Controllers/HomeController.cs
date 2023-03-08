@@ -49,13 +49,12 @@ namespace LearningApp.Controllers
             string email = claims.SingleOrDefault(x => x.type.Contains("emailaddress")).value;
             string givenname = claims.SingleOrDefault(x => x.type.Contains("givenname")).value;
 
-            Account acc = new Account(givenname, true, email, "0971858758", email, "000000", 2, true);
+            Account acc = new Account(givenname, true, email, "0971858758", "jack", "000000", 2, true);
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var exist = learningEnglishContext.Accounts.SingleOrDefault(x => x.Email.Equals(email));
             if (exist != null)
             {
-                learningEnglishContext.Accounts.Add(acc);
-                learningEnglishContext.SaveChanges();
+
                 var username = JsonConvert.SerializeObject(acc.UserName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
@@ -67,6 +66,8 @@ namespace LearningApp.Controllers
             }
             else
             {
+                learningEnglishContext.Accounts.Add(acc);
+                learningEnglishContext.SaveChanges();
                 var username = JsonConvert.SerializeObject(acc.UserName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
@@ -209,7 +210,11 @@ namespace LearningApp.Controllers
                 HttpContext.Session.SetString("act", act);
                 return RedirectToAction("Index");
             }
-            return RedirectToAction("Login");
+            else
+            {
+                ViewBag.NoAccount = "Account is not exist";
+                return RedirectToAction("Login");
+            }
         }
 
         public static string EncodePassword(string password)
