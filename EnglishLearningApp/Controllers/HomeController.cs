@@ -46,18 +46,22 @@ namespace EnglishLearningApp.Controllers
             {
                 string k = i.value;
             }
-            string email = claims.SingleOrDefault(x => x.type.Contains("emailaddress")).value;
-            string givenname = claims.SingleOrDefault(x => x.type.Contains("givenname")).value;
 
-            Account acc = new Account(givenname, true, email, "0971858758", "jack", "000000", 2, true);
+            string x = claims[2].value;
+
+            string email = claims.SingleOrDefault(x => x.type.Contains("emailaddress")).value;
+            string username = claims.SingleOrDefault(x => x.type.Contains("name")).value;
+            string fullname = claims.SingleOrDefault(x => x.type.Contains("givenname")).value;
+
+            Account acc = new Account(fullname, true, email, "", username, "000000", 2, true);
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var exist = learningEnglishContext.Accounts.SingleOrDefault(x => x.Email.Equals(email));
             if (exist != null)
             {
-                var username = JsonConvert.SerializeObject(acc.UserName);
+                var username1 = JsonConvert.SerializeObject(acc.UserName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
-                HttpContext.Session.SetString("username", username);
+                HttpContext.Session.SetString("username", username1);
                 HttpContext.Session.SetString("role", role);
                 HttpContext.Session.SetString("act", act);
                 return RedirectToAction("Index");
@@ -66,10 +70,10 @@ namespace EnglishLearningApp.Controllers
             {
                 learningEnglishContext.Accounts.Add(acc);
                 learningEnglishContext.SaveChanges();
-                var username = JsonConvert.SerializeObject(acc.UserName);
+                var username2 = JsonConvert.SerializeObject(acc.UserName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
-                HttpContext.Session.SetString("username", username);
+                HttpContext.Session.SetString("username", username2);
                 HttpContext.Session.SetString("role", role);
                 HttpContext.Session.SetString("act", act);
                 return RedirectToAction("Index");
@@ -104,10 +108,55 @@ namespace EnglishLearningApp.Controllers
         public IActionResult EnrollLevel(int? id, int? page)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
-            var list = (from i in learningEnglishContext.Lessons
-                        join j in learningEnglishContext.VocabInLessons on i.Id equals j.LessonId
-                        where i.LevelId == id
-                        select new VocabInLesson { Id = i.Id, Image = j.Image, Word = j.Word, Pronunciation = j.Pronunciation, Meaning = j.Meaning }).ToList();
+            var list1 =
+                 (from i in learningEnglishContext.Lessons
+                  join j in learningEnglishContext.Parts on i.PartId equals j.Id
+                  join l in learningEnglishContext.Levels on i.LevelId equals l.Id
+                  where i.LevelId == id
+                  select new
+                  {
+                      Id = i.Id,
+                      Lesson = i.Lesson1,
+                      Image = i.Image,
+                      Part = j.PartName,
+                      Level = l.Level1
+                  }).ToList();
+
+            List<LessonDTO> list = new List<LessonDTO>();
+            foreach (var i in list1)
+            {
+                list.Add(new LessonDTO(i.Id, i.Lesson, i.Part, i.Level, i.Image));
+            }
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1;
+            }
+            ViewBag.lessonId = id;
+            int limit = 2;
+            int start = (int)(page - 1) * limit;
+            int total = list.Count();
+            ViewBag.total = total;
+            ViewBag.pageCurrent = page;
+            float numberPage = (total / limit);
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage) + 1;
+            var data = list.OrderBy(s => s.Id).Skip(start).Take(limit).ToList();
+
+            return View(data);
+        }
+
+        public IActionResult ViewLesson(int? id, int? page)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var list =
+            (from i in learningEnglishContext.Lessons
+             join j in learningEnglishContext.VocabInLessons on i.Id equals j.LessonId
+             where i.Id == id
+             select new VocabInLesson { Id = i.Id, Image = j.Image, Word = j.Word, Pronunciation = j.Pronunciation, Meaning = j.Meaning }).ToList();
+
             if (page > 0)
             {
                 page = page;
@@ -133,7 +182,7 @@ namespace EnglishLearningApp.Controllers
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var list = (from j in learningEnglishContext.Questions
-                        where j.LessonId == 1
+                        where j.LessonId == id
                         select j).ToList();
             var list1 = (from j in learningEnglishContext.Answers
                          select j).ToList();

@@ -174,3 +174,4 @@ C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\n
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Shared\SignUp.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AccountManagement.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\LessonManagement.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\ViewLesson.cshtml.g.cs

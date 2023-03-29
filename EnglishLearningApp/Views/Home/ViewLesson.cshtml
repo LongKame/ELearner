@@ -1,4 +1,4 @@
-﻿@model List<EnglishLearningApp.DTO.LessonDTO>
+﻿@model List<EnglishLearningApp.Models.VocabInLesson>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -22,7 +22,8 @@
         margin-left: 5%;
     }
 </style>
-
+<a href="/Home/TestLesson/@ViewBag.lessonId">Test</a>
+@*<a href="/Home/TestLesson/1">Test</a>*@
 <div class="container">
     <form class="navbar-form navbar-right">
         <input type="text" class="form-control" placeholder="Search...">
@@ -32,11 +33,12 @@
         <thead>
             <tr>
                 <th>NO</th>
-                <th>Lesson</th>
+                <th>Word</th>
                 <th>Image</th>
-                <th>Part</th>
-                <th>Level</th>
-                <th>Action</th>
+                <th>Pronunciation</th>
+                <th>Meaning</th>
+                <th>Synonymous</th>
+                <th>Antonymous</th>
             </tr>
         </thead>
         <tbody>
@@ -44,11 +46,12 @@
             {
                 <tr>
                     <td class="nr td-actions text-center"></td>
-                    <td>@j.Lesson1</td>
+                    <td>@j.Word</td>
                     <td><img src="@j.Image" width="120" height="120"></td>
-                    <td>@j.Part</td>
-                    <td>@j.Level</td>
-                    <td><a href="/Home/ViewLesson/@j.Id" class="btn btn-primary">View</a></td>
+                    <td>@j.Pronunciation</td>
+                    <td>@j.Meaning</td>
+                    <td>@j.Synonymous</td>
+                    <td>@j.Antonymous</td>
                 </tr>
             }
         </tbody>
