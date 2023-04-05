@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="form-outline" style="width: 40%;margin-left:20%">
+    <form action="/Home/DoUpdateLesson" method="post">
+        <input type="hidden" name="vocabInLesson.Id" class="form-control" value="@Model.Id">
+        <div class="form-group">
+            <label>Image:</label>
+            <img src="@Model.Image" style="height:150px;width:120px" />
+        </div>
+        <div class="form-group">
+            <label>Word:</label>
+            <input type="text" name="vocabInLesson.Word" class="form-control" placeholder="Enter word" value="@Model.Word">
+        </div>
+        <div class="form-group">
+            <label>Pronunciation:</label>
+            <input type="text" name="vocabInLesson.Pronunciation" class="form-control" placeholder="Enter pronunciation" value="@Model.Pronunciation">
+        </div>
+        <div class="form-group">
+            <label>Meaning:</label>
+            <input type="text" name="vocabInLesson.Meaning" class="form-control" placeholder="Enter meaning" value="@Model.Meaning">
+        </div>
+        <div class="form-group">
+            <label>Synonymous:</label>
+            <input type="text" name="vocabInLesson.Synonymous" class="form-control" placeholder="Enter synonymous" value="@Model.Synonymous">
+        </div>
+        <div class="form-group">
+            <label>Antonymous:</label>
+            <input type="text" name="vocabInLesson.Antonymous" class="form-control" placeholder="Enter antonymous" value="@Model.Antonymous">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+

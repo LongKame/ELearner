@@ -10,13 +10,13 @@
         <thead>
             <tr>
                 <th scope="col">NO</th>
-                <th scope="col">FullName</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Email</th>
-                <th scope="col">ContactNo</th>
-                <th scope="col">UserName</th>
-                @*<th scope="col">Role</th>*@
-                <th scope="col">Status</th>
+                <th scope="col">Lesson</th>
+                <th scope="col">Image</th>
+                <th scope="col">Word</th>
+                <th scope="col">Pronunciation</th>
+                <th scope="col">Meaning</th>
+                <th scope="col">Synonymous</th>
+                <th scope="col">Antonymous</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -25,13 +25,14 @@
             {
                 <tr>
                     <td class="nr td-actions text-center"></td>
-                    <td>@j.FullName</td>
-                    <td>@(j.Gender == true ? "Male" : "Female")</td>
-                    <td>@j.Email</td>
-                    <td>@j.ContactNo</td>
-                    <td>@j.UserName</td>
-                    <td>@(j.Status == true ? "Active" : "Deactive")</td>
-                    <td><a href="/Home/UpdateAccount/@j.Id">Update Status</a></td>
+                    <td>@j.Lesson</td>
+                    <td><img style="height:100px;width:80px" src="@j.Image" /></td>
+                    <td>@j.Word</td>
+                    <td>@j.Pronunciation</td>
+                    <td>@j.Meaning</td>
+                    <td>@j.Synonymous</td>
+                    <td>@j.Antonymous</td>
+                    <td><a href="/Home/UpdateWord/@j.Id">Update</a></td>
                 </tr>
             }
         </tbody>

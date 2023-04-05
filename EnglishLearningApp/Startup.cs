@@ -40,7 +40,7 @@ namespace EnglishLearningApp
                 {
                     options.ClientId = "1052335362015-pp43ikmjvro5gjpgv5p174742v3mn9ki.apps.googleusercontent.com";
                     options.ClientSecret = "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";
-                    //options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+                    options.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
                 });
         }
 

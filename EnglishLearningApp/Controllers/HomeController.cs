@@ -47,18 +47,15 @@ namespace EnglishLearningApp.Controllers
                 string k = i.value;
             }
 
-            string x = claims[2].value;
-
             string email = claims.SingleOrDefault(x => x.type.Contains("emailaddress")).value;
-            string username = claims.SingleOrDefault(x => x.type.Contains("name")).value;
+            string username = claims[1].value;
             string fullname = claims.SingleOrDefault(x => x.type.Contains("givenname")).value;
-
-            Account acc = new Account(fullname, true, email, "", username, "000000", 2, true);
+            Account acc = new Account(fullname, true, email, "", "DefaultValue", "000000", 2, true);
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var exist = learningEnglishContext.Accounts.SingleOrDefault(x => x.Email.Equals(email));
             if (exist != null)
             {
-                var username1 = JsonConvert.SerializeObject(acc.UserName);
+                var username1 = JsonConvert.SerializeObject(acc.FullName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
                 HttpContext.Session.SetString("username", username1);
@@ -70,7 +67,7 @@ namespace EnglishLearningApp.Controllers
             {
                 learningEnglishContext.Accounts.Add(acc);
                 learningEnglishContext.SaveChanges();
-                var username2 = JsonConvert.SerializeObject(acc.UserName);
+                var username2 = JsonConvert.SerializeObject(acc.FullName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
                 HttpContext.Session.SetString("username", username2);
@@ -186,15 +183,27 @@ namespace EnglishLearningApp.Controllers
                         select j).ToList();
             var list1 = (from j in learningEnglishContext.Answers
                          select j).ToList();
+            //ViewBag.LessonId = id;
             foreach (var i in list)
             {
                 var x = i.Answers;
             }
+            var lessonId = Newtonsoft.Json.JsonConvert.SerializeObject(id);
+            HttpContext.Session.SetString("lessonId", lessonId);
             return View(list);
         }
 
         public IActionResult Mark(IFormCollection iformCollection)
         {
+
+            Account account = new Account();
+            string? account1 = HttpContext.Session.GetString("username");
+
+            account = JsonConvert.DeserializeObject<Account>(account1);
+
+            string? id = HttpContext.Session.GetString("lessonId");
+            string lessonId = JsonConvert.DeserializeObject<string>(id);
+
             int score = 0;
             string[] questionId = iformCollection["questionId"];
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
@@ -206,6 +215,14 @@ namespace EnglishLearningApp.Controllers
                     score++;
                 }
             }
+
+            PassLevel passLevel = new PassLevel();
+            passLevel.AccountId = account.Id;
+            passLevel.LessonId = Convert.ToInt32(lessonId);
+            passLevel.Status = score >= 5 ? true : false;
+            learningEnglishContext.PassLevels.Add(passLevel);
+            learningEnglishContext.SaveChanges();
+
             ViewBag.score = score;
             return View();
         }
@@ -318,6 +335,26 @@ namespace EnglishLearningApp.Controllers
             return View(data);
         }
 
+        public IActionResult UpdateAccount(int? id)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var acc = learningEnglishContext.Accounts.SingleOrDefault(x => x.Id == id);
+            if (acc != null)
+            {
+                if (acc.Status == true)
+                {
+                    acc.Status = false;
+                    learningEnglishContext.SaveChanges();
+                }
+                else
+                {
+                    acc.Status = true;
+                    learningEnglishContext.SaveChanges();
+                }
+            }
+            return RedirectToAction("AccountManagement");
+        }
+
         public IActionResult LessonManagement(int? page)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
@@ -359,17 +396,165 @@ namespace EnglishLearningApp.Controllers
             return View(data);
         }
 
-        public IActionResult QuizManagement()
+        public IActionResult UpdateLesson(int? id)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
-            var listLesson = learningEnglishContext.Lessons.ToList();
-            return View(listLesson);
+            var lesson = learningEnglishContext.Lessons.SingleOrDefault(x => x.Id == id);
+            if (lesson != null)
+            {
+                var part = learningEnglishContext.Parts.ToList();
+                var level = learningEnglishContext.Levels.ToList();
+                ViewBag.PartId = lesson.PartId;
+                ViewBag.LevelId = lesson.LevelId;
+                ViewBag.Part = part;
+                ViewBag.Level = level;
+                return View(lesson);
+            }
+            return RedirectToAction("LessonManagement");
+        }
+
+        public IActionResult DoUpdateLesson(Lesson lesson)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var les = learningEnglishContext.Lessons.SingleOrDefault(x => x.Id == lesson.Id);
+            if (les != null)
+            {
+                les.Lesson1 = lesson.Lesson1;
+                les.PartId = lesson.PartId;
+                les.LevelId = lesson.LevelId;
+                if (lesson.Image != null)
+                {
+                    les.Image = lesson.Image;
+                }
+                learningEnglishContext.SaveChanges();
+            }
+            return RedirectToAction("LessonManagement");
+        }
+
+        public IActionResult QuizManagement(int? page)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var quiz = (from ques in learningEnglishContext.Questions
+                        join lesson in learningEnglishContext.Lessons on ques.LessonId equals lesson.Id
+                        select new
+                        {
+                            Id = ques.Id,
+                            Question = ques.Question1,
+                            Lesson = lesson.Lesson1,
+                            listAnswer = ques.Answers
+                        }).ToList();
+
+            List<QuizDTO> list = new List<QuizDTO>();
+
+            foreach (var i in quiz)
+            {
+                list.Add(new QuizDTO(i.Id, i.Question, i.Lesson, i.listAnswer));
+            }
+
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1;
+            }
+            int limit = 5;
+            int start = (int)(page - 1) * limit;
+            int total = list.Count();
+            ViewBag.total = total;
+            ViewBag.pageCurrent = page;
+            float numberPage = (total / limit);
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage) + 1;
+            var data = list.OrderBy(s => s.Id).Skip(start).Take(limit).ToList();
+            return View(data);
+        }
+
+        public IActionResult WordManagement(int? page)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var listVocab = (from lesson in learningEnglishContext.Lessons
+                             join vocab in learningEnglishContext.VocabInLessons on lesson.Id equals vocab.LessonId
+                             select new
+                             {
+                                 Id = vocab.Id,
+                                 Lesson = lesson.Lesson1,
+                                 Image = vocab.Image,
+                                 Word = vocab.Word,
+                                 Pronunciation = vocab.Pronunciation,
+                                 Meaning = vocab.Meaning,
+                                 Synonymous = vocab.Synonymous,
+                                 Antonymous = vocab.Antonymous
+                             }).ToList();
+
+            List<VocabDTO> list = new List<VocabDTO>();
+
+            foreach (var i in listVocab)
+            {
+                list.Add(new VocabDTO(i.Id, i.Lesson, i.Image, i.Word, i.Pronunciation, i.Meaning, i.Synonymous, i.Antonymous));
+            }
+
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1;
+            }
+            int limit = 5;
+            int start = (int)(page - 1) * limit;
+            int total = list.Count();
+            ViewBag.total = total;
+            ViewBag.pageCurrent = page;
+            float numberPage = (total / limit);
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage) + 1;
+            var data = list.OrderBy(s => s.Id).Skip(start).Take(limit).ToList();
+            return View(data);
+        }
+
+        public IActionResult UpdateWord(int? id)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var word = learningEnglishContext.VocabInLessons.SingleOrDefault(x => x.Id == id);
+            if (word != null)
+            {
+                return View(word);
+            }
+            return RedirectToAction("WordManagement");
+        }
+
+        public IActionResult DoUpdateWord(VocabInLesson vocabInLesson)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var vocabInLesson1 = learningEnglishContext.VocabInLessons.SingleOrDefault(x => x.Id == vocabInLesson.Id);
+            if (vocabInLesson1 != null)
+            {
+                vocabInLesson1.Word = vocabInLesson.Word;
+                vocabInLesson1.Pronunciation = vocabInLesson.Pronunciation;
+                vocabInLesson1.Meaning = vocabInLesson.Meaning;
+                vocabInLesson1.Synonymous = vocabInLesson.Synonymous;
+                vocabInLesson1.Antonymous = vocabInLesson.Antonymous;
+                if (vocabInLesson.Image != null)
+                {
+                    vocabInLesson1.Image = vocabInLesson.Image;
+                }
+                learningEnglishContext.SaveChanges();
+            }
+            return RedirectToAction("WordManagement");
         }
 
         public IActionResult SentenceStructure()
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var listSentenceStructure = learningEnglishContext.SentenceStructures.ToList();
+            return View(listSentenceStructure);
+        }
+
+        public IActionResult PartManagement()
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var listSentenceStructure = learningEnglishContext.Parts.ToList();
             return View(listSentenceStructure);
         }
 

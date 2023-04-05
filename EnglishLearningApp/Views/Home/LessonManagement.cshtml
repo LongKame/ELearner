@@ -14,7 +14,7 @@
                 <th scope="col">Part</th>
                 <th scope="col">Level</th>
                 <th scope="col">Avatar</th>
-                <th scope="col">Delete</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +26,7 @@
                     <td>@j.Part</td>
                     <td>@j.Level</td>
                     <td><img style="height:100px;width:80px" src="@j.Image" /></td>
-                    <td><a href="/Home/DeleteLesson/@j.Id">Delete</a></td>
+                    <td><a href="/Home/UpdateLesson/@j.Id">Update</a></td>
                 </tr>
             }
         </tbody>

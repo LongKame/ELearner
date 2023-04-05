@@ -10,14 +10,8 @@
         <thead>
             <tr>
                 <th scope="col">NO</th>
-                <th scope="col">FullName</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Email</th>
-                <th scope="col">ContactNo</th>
-                <th scope="col">UserName</th>
-                @*<th scope="col">Role</th>*@
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
+                <th scope="col">Lesson</th>
+                <th scope="col">Question</th>
             </tr>
         </thead>
         <tbody>
@@ -25,13 +19,10 @@
             {
                 <tr>
                     <td class="nr td-actions text-center"></td>
-                    <td>@j.FullName</td>
-                    <td>@(j.Gender == true ? "Male" : "Female")</td>
-                    <td>@j.Email</td>
-                    <td>@j.ContactNo</td>
-                    <td>@j.UserName</td>
-                    <td>@(j.Status == true ? "Active" : "Deactive")</td>
-                    <td><a href="/Home/UpdateAccount/@j.Id">Update Status</a></td>
+                    <td>@j.Lesson</td>
+                    <td>@j.Question</td>
+                    @*<td>@j.Answer1</td>*@
+                    <td><a href="/Home/UpdateQuiz/@j.Id">Update</a></td>
                 </tr>
             }
         </tbody>

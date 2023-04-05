@@ -175,3 +175,7 @@ C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\n
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AccountManagement.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\LessonManagement.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\ViewLesson.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\UpdateLesson.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\QuizManagement.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\WordManagement.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\UpdateWord.cshtml.g.cs
