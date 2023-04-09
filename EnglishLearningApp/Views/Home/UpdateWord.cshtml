@@ -3,12 +3,32 @@
 *@
 @{
 }
+<style>
+    .form-outline {
+        margin-top: 3%;
+        position: relative;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+        display: inline-block;
+    }
+</style>
 <div class="form-outline" style="width: 40%;margin-left:20%">
-    <form action="/Home/DoUpdateLesson" method="post">
+    <form action="/Home/DoUpdateWord" method="post">
         <input type="hidden" name="vocabInLesson.Id" class="form-control" value="@Model.Id">
         <div class="form-group">
             <label>Image:</label>
             <img src="@Model.Image" style="height:150px;width:120px" />
+        </div>
+        <div class="form-group">
+            <label>Lesson:</label>
+            <select class="form-select" name="lesson.LessonId">
+                @foreach (var i in ViewBag.Lesson)
+                {
+                    <option selected="@(i.Id == ViewBag.LessonId ? "selected" : null)" value="@i.Id">@i.Lesson1</option>
+                }
+            </select>
         </div>
         <div class="form-group">
             <label>Word:</label>

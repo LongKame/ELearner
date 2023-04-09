@@ -179,3 +179,7 @@ C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\n
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\QuizManagement.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\WordManagement.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\UpdateWord.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AddNewWord.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\UpdateQuiz.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AddNewQuiz.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AddNewLesson.cshtml.g.cs

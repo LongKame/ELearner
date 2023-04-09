@@ -58,9 +58,11 @@ namespace EnglishLearningApp.Controllers
                 var username1 = JsonConvert.SerializeObject(acc.FullName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
+                var userId = Newtonsoft.Json.JsonConvert.SerializeObject(exist.Id);
                 HttpContext.Session.SetString("username", username1);
                 HttpContext.Session.SetString("role", role);
                 HttpContext.Session.SetString("act", act);
+                HttpContext.Session.SetString("userId", userId);
                 return RedirectToAction("Index");
             }
             else
@@ -70,9 +72,11 @@ namespace EnglishLearningApp.Controllers
                 var username2 = JsonConvert.SerializeObject(acc.FullName);
                 var role = JsonConvert.SerializeObject(acc.RoleId);
                 var act = Newtonsoft.Json.JsonConvert.SerializeObject(acc);
+                var userId = Newtonsoft.Json.JsonConvert.SerializeObject(acc.Id);
                 HttpContext.Session.SetString("username", username2);
                 HttpContext.Session.SetString("role", role);
                 HttpContext.Session.SetString("act", act);
+                HttpContext.Session.SetString("userId", userId);
                 return RedirectToAction("Index");
             }
         }
@@ -81,7 +85,7 @@ namespace EnglishLearningApp.Controllers
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var list = learningEnglishContext.Levels.ToList();
-
+            ViewBag.Active = "5";
             if (page > 0)
             {
                 page = page;
@@ -105,6 +109,9 @@ namespace EnglishLearningApp.Controllers
         public IActionResult EnrollLevel(int? id, int? page)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            string? userId = HttpContext.Session.GetString("userId");
+            string userId1 = JsonConvert.DeserializeObject<string>(userId);
+
             var list1 =
                  (from i in learningEnglishContext.Lessons
                   join j in learningEnglishContext.Parts on i.PartId equals j.Id
@@ -122,7 +129,23 @@ namespace EnglishLearningApp.Controllers
             List<LessonDTO> list = new List<LessonDTO>();
             foreach (var i in list1)
             {
-                list.Add(new LessonDTO(i.Id, i.Lesson, i.Part, i.Level, i.Image));
+                var pass = learningEnglishContext
+                    .PassLevels.SingleOrDefault(x => x.AccountId == Convert.ToInt32(userId1) && x.LessonId == i.Id);
+                if (pass != null)
+                {
+                    if (pass.Status == true)
+                    {
+                        list.Add(new LessonDTO(i.Id, i.Lesson, i.Part, i.Level, i.Image, true));
+                    }
+                    else if (pass.Status == false)
+                    {
+                        list.Add(new LessonDTO(i.Id, i.Lesson, i.Part, i.Level, i.Image, false));
+                    }
+                }
+                else if (pass == null)
+                {
+                    list.Add(new LessonDTO(i.Id, i.Lesson, i.Part, i.Level, i.Image, null));
+                }
             }
             if (page > 0)
             {
@@ -197,12 +220,16 @@ namespace EnglishLearningApp.Controllers
         {
 
             Account account = new Account();
-            string? account1 = HttpContext.Session.GetString("username");
+            string? account1 = HttpContext.Session.GetString("act");
 
             account = JsonConvert.DeserializeObject<Account>(account1);
 
             string? id = HttpContext.Session.GetString("lessonId");
             string lessonId = JsonConvert.DeserializeObject<string>(id);
+
+            string? userId = HttpContext.Session.GetString("userId");
+            string userId1 = JsonConvert.DeserializeObject<string>(userId);
+
 
             int score = 0;
             string[] questionId = iformCollection["questionId"];
@@ -216,13 +243,23 @@ namespace EnglishLearningApp.Controllers
                 }
             }
 
-            PassLevel passLevel = new PassLevel();
-            passLevel.AccountId = account.Id;
-            passLevel.LessonId = Convert.ToInt32(lessonId);
-            passLevel.Status = score >= 5 ? true : false;
-            learningEnglishContext.PassLevels.Add(passLevel);
-            learningEnglishContext.SaveChanges();
+            var available = learningEnglishContext.PassLevels
+                .SingleOrDefault(x => x.AccountId == Convert.ToInt32(userId1) && x.LessonId == Convert.ToInt32(lessonId));
 
+            if (available != null)
+            {
+                available.Status = score >= 5 ? true : false;
+                learningEnglishContext.SaveChanges();
+            }
+            else
+            {
+                PassLevel passLevel = new PassLevel();
+                passLevel.AccountId = Convert.ToInt32(userId1);
+                passLevel.LessonId = Convert.ToInt32(lessonId);
+                passLevel.Status = score >= 5 ? true : false;
+                learningEnglishContext.PassLevels.Add(passLevel);
+                learningEnglishContext.SaveChanges();
+            }
             ViewBag.score = score;
             return View();
         }
@@ -316,6 +353,7 @@ namespace EnglishLearningApp.Controllers
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var listAcc = learningEnglishContext.Accounts.ToList();
+            ViewBag.Active = "1";
             if (page > 0)
             {
                 page = page;
@@ -369,7 +407,7 @@ namespace EnglishLearningApp.Controllers
                                   Level = level.Level1,
                                   Image = lesson.Image
                               }).ToList();
-
+            ViewBag.Active = "2";
             List<LessonDTO> list = new List<LessonDTO>();
 
             foreach (var i in listLesson)
@@ -400,6 +438,7 @@ namespace EnglishLearningApp.Controllers
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var lesson = learningEnglishContext.Lessons.SingleOrDefault(x => x.Id == id);
+            ViewBag.Active = "2";
             if (lesson != null)
             {
                 var part = learningEnglishContext.Parts.ToList();
@@ -413,9 +452,56 @@ namespace EnglishLearningApp.Controllers
             return RedirectToAction("LessonManagement");
         }
 
+        //public IActionResult AddNewLesson(int? id)
+        //{
+        //    LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+        //    var lesson = learningEnglishContext.Lessons.SingleOrDefault(x => x.Id == id);
+        //    if (lesson != null)
+        //    {
+        //        var part = learningEnglishContext.Parts.ToList();
+        //        var level = learningEnglishContext.Levels.ToList();
+        //        ViewBag.PartId = lesson.PartId;
+        //        ViewBag.LevelId = lesson.LevelId;
+        //        ViewBag.Part = part;
+        //        ViewBag.Level = level;
+        //        return View(lesson);
+        //    }
+        //    return RedirectToAction("LessonManagement");
+        //}
+
+        public IActionResult AddNewLesson()
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "2";
+            var part = learningEnglishContext.Parts.ToList();
+            var level = learningEnglishContext.Levels.ToList();
+            ViewBag.Part = part;
+            ViewBag.Level = level;
+            return View();
+        }
+
+        public IActionResult DoAddLesson(Lesson lesson)
+        {
+            //LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            //var lesson = learningEnglishContext.Lessons.SingleOrDefault(x => x.Id == id);
+            //if (lesson != null)
+            //{
+            //    var part = learningEnglishContext.Parts.ToList();
+            //    var level = learningEnglishContext.Levels.ToList();
+            //    ViewBag.PartId = lesson.PartId;
+            //    ViewBag.LevelId = lesson.LevelId;
+            //    ViewBag.Part = part;
+            //    ViewBag.Level = level;
+            //    return View(lesson);
+            //}
+            ViewBag.Active = "2";
+            return RedirectToAction("LessonManagement");
+        }
+
         public IActionResult DoUpdateLesson(Lesson lesson)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "2";
             var les = learningEnglishContext.Lessons.SingleOrDefault(x => x.Id == lesson.Id);
             if (les != null)
             {
@@ -443,7 +529,7 @@ namespace EnglishLearningApp.Controllers
                             Lesson = lesson.Lesson1,
                             listAnswer = ques.Answers
                         }).ToList();
-
+            ViewBag.Active = "3";
             List<QuizDTO> list = new List<QuizDTO>();
 
             foreach (var i in quiz)
@@ -486,7 +572,7 @@ namespace EnglishLearningApp.Controllers
                                  Synonymous = vocab.Synonymous,
                                  Antonymous = vocab.Antonymous
                              }).ToList();
-
+            ViewBag.Active = "4";
             List<VocabDTO> list = new List<VocabDTO>();
 
             foreach (var i in listVocab)
@@ -517,16 +603,127 @@ namespace EnglishLearningApp.Controllers
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             var word = learningEnglishContext.VocabInLessons.SingleOrDefault(x => x.Id == id);
+            var lesson = learningEnglishContext.Lessons.ToList();
             if (word != null)
             {
+                ViewBag.LessonId = word.LessonId;
+                ViewBag.Lesson = lesson;
                 return View(word);
             }
             return RedirectToAction("WordManagement");
         }
 
+        public IActionResult UpdateQuiz(int? id)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "3";
+            var question = learningEnglishContext.Questions.SingleOrDefault(x => x.Id == id);
+            var lesson = learningEnglishContext.Lessons.ToList();
+            var quiz = (from j in learningEnglishContext.Answers
+                        where j.QuestionId == id
+                        select j).ToList();
+            if (question != null)
+            {
+                ViewBag.LessonId = question.LessonId;
+                ViewBag.Lesson = lesson;
+                return View(question);
+            }
+            return RedirectToAction("QuizManagement");
+        }
+
+        public IActionResult DeleteQuiz(int? id)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "3";
+            var question = learningEnglishContext.Questions.SingleOrDefault(x => x.Id == id);
+            var lesson = learningEnglishContext.Lessons.ToList();
+            learningEnglishContext.Answers.RemoveRange(learningEnglishContext.Answers.Where(x => x.QuestionId == question.Id));
+            learningEnglishContext.Questions.Remove(question);
+            learningEnglishContext.SaveChanges();
+            return RedirectToAction("QuizManagement");
+        }
+
+        public IActionResult AddNewQuiz()
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "3";
+            var lesson = learningEnglishContext.Lessons.ToList();
+            ViewBag.Lesson = lesson;
+            return View();
+        }
+
+        public IActionResult DoAddQuiz(string question, string correct, string lessonId, string answer1, string answer2, string answer3, string answer4)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "3";
+            bool correctAnswerA = false, correctAnswerB = false, correctAnswerC = false, correctAnswerD = false;
+            List<Answer> list = new List<Answer>();
+            if (correct.Equals("Answer1"))
+            {
+                correctAnswerA = true;
+            }
+            if (correct.Equals("Answer2"))
+            {
+                correctAnswerB = true;
+            }
+            if (correct.Equals("Answer3"))
+            {
+                correctAnswerC = true;
+            }
+            if (correct.Equals("Answer4"))
+            {
+                correctAnswerD = true;
+            }
+            //list.Add(new Answer());
+            Question quest = new Question(Convert.ToInt32(lessonId), question);
+            learningEnglishContext.Questions.Add(quest);
+            learningEnglishContext.SaveChanges();
+            int idQuest = quest.Id;
+            list.Add(new Answer(idQuest, answer1, correctAnswerA));
+            list.Add(new Answer(idQuest, answer2, correctAnswerB));
+            list.Add(new Answer(idQuest, answer3, correctAnswerC));
+            list.Add(new Answer(idQuest, answer4, correctAnswerD));
+
+            foreach (var i in list)
+            {
+                learningEnglishContext.Answers.Add(i);
+                learningEnglishContext.SaveChanges();
+            }
+
+            return RedirectToAction("QuizManagement");
+        }
+
+        //public IActionResult DoUpdateQuiz(IFormCollection iformCollection)
+        //{
+        //    LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+        //    string questionId = iformCollection["questionId"];
+
+        //    var question = learningEnglishContext.Questions.SingleOrDefault(x => x.Id == Convert.ToInt32(questionId));
+        //    var answer = question.Answers;
+
+
+
+        //    foreach (var i in questionId)
+        //    {
+        //        var corrcetAnswers = learningEnglishContext.Answers
+        //            .Where(a => a.Correct == true && a.QuestionId == Convert.ToInt32(i)).FirstOrDefault();
+        //    }
+        //    return RedirectToAction("QuizManagement");
+        //}
+
+        public IActionResult AddNewWord()
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "4";
+            var lesson = learningEnglishContext.Lessons.ToList();
+            ViewBag.Lesson = lesson;
+            return View();
+        }
+
         public IActionResult DoUpdateWord(VocabInLesson vocabInLesson)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "4";
             var vocabInLesson1 = learningEnglishContext.VocabInLessons.SingleOrDefault(x => x.Id == vocabInLesson.Id);
             if (vocabInLesson1 != null)
             {
@@ -541,6 +738,15 @@ namespace EnglishLearningApp.Controllers
                 }
                 learningEnglishContext.SaveChanges();
             }
+            return RedirectToAction("WordManagement");
+        }
+
+        public IActionResult DoAddNewWord(VocabInLesson vocabInLesson)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Active = "4";
+            learningEnglishContext.VocabInLessons.Add(vocabInLesson);
+            learningEnglishContext.SaveChanges();
             return RedirectToAction("WordManagement");
         }
 

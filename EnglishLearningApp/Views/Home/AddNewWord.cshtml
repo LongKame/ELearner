@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+    .form-outline {
+        margin-top: 3%;
+        position: relative;
+        text-align: center;
+        border-style: solid;
+        border-width: 1px;
+        border-color: gray;
+        display: inline-block;
+    }
+</style>
+<div class="form-outline" style="width: 40%;margin-left:20%">
+    <form action="/Home/DoAddNewWord" method="post">
+        <div class="form-group">
+            <label>Word:</label>
+            <input type="text" name="vocabInLesson.Word" class="form-control" placeholder="Enter word">
+        </div>
+        <div class="form-group">
+            <label>Lesson:</label>
+            <select class="form-select form-select-lg mb-3" name="vocabInLesson.LessonId">
+                <option selected>Open this select part</option>
+                @foreach (var i in ViewBag.Lesson)
+                {
+                    <option value="@i.Id">@i.Lesson1</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Pronunciation:</label>
+            <input type="text" name="vocabInLesson.Pronunciation" class="form-control" placeholder="Enter pronunciation">
+        </div>
+        <div class="form-group">
+            <label>Meaning:</label>
+            <input type="text" name="vocabInLesson.Meaning" class="form-control" placeholder="Enter meaning">
+        </div>
+        <div class="form-group">
+            <label>Synonymous:</label>
+            <input type="text" name="vocabInLesson.Synonymous" class="form-control" placeholder="Enter synonymous">
+        </div>
+        <div class="form-group">
+            <label>Antonymous:</label>
+            <input type="text" name="vocabInLesson.Antonymous" class="form-control" placeholder="Enter antonymous">
+        </div>
+        <div class="form-group">
+            <label>Image:</label>
+            <input type="file" name="vocabInLesson.Image" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+

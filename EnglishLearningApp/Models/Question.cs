@@ -12,6 +12,12 @@ namespace EnglishLearningApp.Models
             Answers = new HashSet<Answer>();
         }
 
+        public Question(int lessonId, string question1)
+        {
+            LessonId = lessonId;
+            Question1 = question1;
+        }
+
         public int Id { get; set; }
         public int LessonId { get; set; }
         public string Question1 { get; set; }

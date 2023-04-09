@@ -13,7 +13,7 @@ namespace EnglishLearningApp.DTO
         public string Question { get; set; }
         public virtual ICollection<Answer> Answers { get; set; }
 
-        public QuizDTO(int id, string lesson, string question, ICollection<Answer> answers)
+        public QuizDTO(int id, string question, string lesson, ICollection<Answer> answers)
         {
             Id = id;
             Lesson = lesson;
