@@ -349,6 +349,112 @@ namespace EnglishLearningApp.Controllers
             return result;
         }
 
+        public IActionResult SentenceStructure(int? page)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var listSentence = (from sc in learningEnglishContext.SentenceStructures
+                                join lesson in learningEnglishContext.Lessons on sc.LessonId equals lesson.Id
+                                select new
+                                {
+                                    Id = sc.Id,
+                                    Lesson = lesson.Lesson1,
+                                    Sentence = sc.Sentence
+                                }
+                           ).ToList();
+
+            List<SentenceStructureDTO> list = new List<SentenceStructureDTO>();
+            foreach (var i in listSentence)
+            {
+                list.Add(new SentenceStructureDTO(i.Id, i.Lesson, i.Sentence));
+            }
+
+            ViewBag.Active = "7";
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1;
+            }
+            int limit = 2;
+            int start = (int)(page - 1) * limit;
+            int total = list.Count();
+            ViewBag.total = total;
+            ViewBag.pageCurrent = page;
+            float numberPage = (total / limit);
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage) + 1;
+            var data = list.OrderBy(s => s.Id).Skip(start).Take(limit).ToList();
+            return View(data);
+        }
+
+        public IActionResult SentenceStructureManagement(int? page)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var listSentence = (from sc in learningEnglishContext.SentenceStructures
+                                join lesson in learningEnglishContext.Lessons on sc.LessonId equals lesson.Id
+                                select new
+                                {
+                                    Id = sc.Id,
+                                    Lesson = lesson.Lesson1,
+                                    LessonId = lesson.Id,
+                                    Sentence = sc.Sentence
+                                }
+                           ).ToList();
+
+            List<SentenceStructureDTO> list = new List<SentenceStructureDTO>();
+            foreach (var i in listSentence)
+            {
+                list.Add(new SentenceStructureDTO(i.Id, i.Lesson, i.LessonId, i.Sentence));
+            }
+
+            ViewBag.Active = "8";
+            if (page > 0)
+            {
+                page = page;
+            }
+            else
+            {
+                page = 1;
+            }
+            int limit = 2;
+            int start = (int)(page - 1) * limit;
+            int total = list.Count();
+            ViewBag.total = total;
+            ViewBag.pageCurrent = page;
+            float numberPage = (total / limit);
+            ViewBag.numberPage = (int)Math.Ceiling(numberPage) + 1;
+            var data = list.OrderBy(s => s.Id).Skip(start).Take(limit).ToList();
+            return View(data);
+        }
+
+        public IActionResult SentenceStructureDelete(int? id)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var sentence = learningEnglishContext.SentenceStructures.SingleOrDefault(x => x.Id == id);
+            if (sentence != null)
+            {
+                learningEnglishContext.SentenceStructures.Remove(sentence);
+                learningEnglishContext.SaveChanges();
+            }
+            return RedirectToAction("SentenceStructureManagement");
+        }
+
+        public IActionResult AddNewSentence()
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            ViewBag.Lesson = learningEnglishContext.Lessons.ToList();
+            return View();
+        }
+
+        public IActionResult DoAddSentence(SentenceStructure sentence)
+        {
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            learningEnglishContext.SentenceStructures.Add(sentence);
+            learningEnglishContext.SaveChanges();
+            return View();
+        }
+
         public IActionResult AccountManagement(int? page)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
@@ -750,12 +856,12 @@ namespace EnglishLearningApp.Controllers
             return RedirectToAction("WordManagement");
         }
 
-        public IActionResult SentenceStructure()
-        {
-            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
-            var listSentenceStructure = learningEnglishContext.SentenceStructures.ToList();
-            return View(listSentenceStructure);
-        }
+        //public IActionResult SentenceStructure()
+        //{
+        //    LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+        //    var listSentenceStructure = learningEnglishContext.SentenceStructures.ToList();
+        //    return View(listSentenceStructure);
+        //}
 
         public IActionResult PartManagement()
         {

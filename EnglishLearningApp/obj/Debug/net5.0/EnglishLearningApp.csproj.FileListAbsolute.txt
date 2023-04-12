@@ -183,3 +183,6 @@ C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\n
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\UpdateQuiz.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AddNewQuiz.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AddNewLesson.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AddNewSentence.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\SentenceStructure.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\SentenceStructureManagement.cshtml.g.cs
