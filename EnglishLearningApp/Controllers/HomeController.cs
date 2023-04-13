@@ -450,6 +450,7 @@ namespace EnglishLearningApp.Controllers
         public IActionResult DoAddSentence(SentenceStructure sentence)
         {
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            sentence.Level = "Default";
             learningEnglishContext.SentenceStructures.Add(sentence);
             learningEnglishContext.SaveChanges();
             return View();
