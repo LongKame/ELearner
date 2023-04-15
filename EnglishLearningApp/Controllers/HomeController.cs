@@ -593,7 +593,7 @@ namespace EnglishLearningApp.Controllers
             LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
             if (lesson != null)
             {
-                lesson.Image = "~/img/" + lesson.Image;
+                lesson.Image = "/img/" + lesson.Image;
                 learningEnglishContext.Lessons.Add(lesson);
                 learningEnglishContext.SaveChanges();
             }
