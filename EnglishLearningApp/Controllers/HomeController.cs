@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using EnglishLearningApp.DTO;
+using System.Web;
 
 namespace EnglishLearningApp.Controllers
 {
@@ -589,18 +590,13 @@ namespace EnglishLearningApp.Controllers
 
         public IActionResult DoAddLesson(Lesson lesson)
         {
-            //LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
-            //var lesson = learningEnglishContext.Lessons.SingleOrDefault(x => x.Id == id);
-            //if (lesson != null)
-            //{
-            //    var part = learningEnglishContext.Parts.ToList();
-            //    var level = learningEnglishContext.Levels.ToList();
-            //    ViewBag.PartId = lesson.PartId;
-            //    ViewBag.LevelId = lesson.LevelId;
-            //    ViewBag.Part = part;
-            //    ViewBag.Level = level;
-            //    return View(lesson);
-            //}
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            if (lesson != null)
+            {
+                lesson.Image = "~/img/" + lesson.Image;
+                learningEnglishContext.Lessons.Add(lesson);
+                learningEnglishContext.SaveChanges();
+            }
             ViewBag.Active = "2";
             return RedirectToAction("LessonManagement");
         }
