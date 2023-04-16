@@ -157,7 +157,7 @@ namespace EnglishLearningApp.Controllers
                 page = 1;
             }
             ViewBag.lessonId = id;
-            int limit = 2;
+            int limit = 5;
             int start = (int)(page - 1) * limit;
             int total = list.Count();
             ViewBag.total = total;
@@ -187,7 +187,7 @@ namespace EnglishLearningApp.Controllers
                 page = 1;
             }
             ViewBag.lessonId = id;
-            int limit = 2;
+            int limit = 5;
             int start = (int)(page - 1) * limit;
             int total = list.Count();
             ViewBag.total = total;
@@ -378,7 +378,7 @@ namespace EnglishLearningApp.Controllers
             {
                 page = 1;
             }
-            int limit = 2;
+            int limit = 5;
             int start = (int)(page - 1) * limit;
             int total = list.Count();
             ViewBag.total = total;
@@ -418,7 +418,7 @@ namespace EnglishLearningApp.Controllers
             {
                 page = 1;
             }
-            int limit = 2;
+            int limit = 5;
             int start = (int)(page - 1) * limit;
             int total = list.Count();
             ViewBag.total = total;
@@ -454,7 +454,7 @@ namespace EnglishLearningApp.Controllers
             sentence.Level = "Default";
             learningEnglishContext.SentenceStructures.Add(sentence);
             learningEnglishContext.SaveChanges();
-            return View();
+            return RedirectToAction("SentenceStructureManagement");
         }
 
         public IActionResult AccountManagement(int? page)
@@ -470,7 +470,7 @@ namespace EnglishLearningApp.Controllers
             {
                 page = 1;
             }
-            int limit = 2;
+            int limit = 5;
             int start = (int)(page - 1) * limit;
             int total = listAcc.Count();
             ViewBag.total = total;

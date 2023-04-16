@@ -17,12 +17,8 @@
 <div class="form-outline" style="width: 40%;margin-left:20%">
     <form action="/Home/DoAddSentence" method="post">
         <div class="form-group">
-            <label>Lesson:</label>
-            <input type="text" name="sentence.Lesson1" class="form-control" placeholder="Enter lesson" value="">
-        </div>
-        <div class="form-group">
             <label>Part:</label>
-            <select class="form-select" name="sentence.PartId">
+            <select class="form-select" name="sentence.LessonId">
                 @foreach (var i in ViewBag.Lesson)
                 {
                     <option value="@i.Id">@i.Lesson1</option>
