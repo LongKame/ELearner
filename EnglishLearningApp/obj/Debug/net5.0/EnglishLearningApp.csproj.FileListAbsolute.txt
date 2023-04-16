@@ -186,3 +186,4 @@ C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\n
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\AddNewSentence.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\SentenceStructure.cshtml.g.cs
 C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\SentenceStructureManagement.cshtml.g.cs
+C:\Users\Computer\source\repos\EnglishLearningApp\EnglishLearningApp\obj\Debug\net5.0\Razor\Views\Home\ViewMark.cshtml.g.cs

@@ -217,6 +217,31 @@ namespace EnglishLearningApp.Controllers
             return View(list);
         }
 
+        public IActionResult ViewMark()
+        {
+            string? id = HttpContext.Session.GetString("userId");
+            string userId = JsonConvert.DeserializeObject<string>(id);
+            LearningEnglishContext learningEnglishContext = new LearningEnglishContext();
+            var userMark = (from pl in learningEnglishContext.PassLevels
+                            join lesson in learningEnglishContext.Lessons on pl.LessonId equals lesson.Id
+                            join level in learningEnglishContext.Levels on lesson.LevelId equals level.Id
+                            select new
+                            {
+                                Lesson = lesson.Lesson1,
+                                Level = level.Level1,
+                                Status = pl.Status
+                            }).ToList();
+
+            List<PassLevelDTO> list = new List<PassLevelDTO>();
+            foreach (var i in userMark)
+            {
+                list.Add(new PassLevelDTO(i.Lesson, i.Level, i.Status));
+            }
+            ViewBag.Active = "6";
+            return View(list);
+            //return RedirectToAction("Index");
+        }
+
         public IActionResult Mark(IFormCollection iformCollection)
         {
 
