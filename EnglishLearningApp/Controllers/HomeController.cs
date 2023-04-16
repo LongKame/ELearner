@@ -339,10 +339,14 @@ namespace EnglishLearningApp.Controllers
                 HttpContext.Session.SetString("username", username);
                 HttpContext.Session.SetString("role", role);
                 HttpContext.Session.SetString("act", act);
+                var exist = Newtonsoft.Json.JsonConvert.SerializeObject("");
+                HttpContext.Session.SetString("exist", exist);
                 return RedirectToAction("Index");
             }
             else
             {
+                var exist = Newtonsoft.Json.JsonConvert.SerializeObject("Account is not exist");
+                HttpContext.Session.SetString("exist", exist);
                 ViewBag.NoAccount = "Account is not exist";
                 return RedirectToAction("Login");
             }
