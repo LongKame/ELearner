@@ -225,6 +225,7 @@ namespace EnglishLearningApp.Controllers
             var userMark = (from pl in learningEnglishContext.PassLevels
                             join lesson in learningEnglishContext.Lessons on pl.LessonId equals lesson.Id
                             join level in learningEnglishContext.Levels on lesson.LevelId equals level.Id
+                            where pl.AccountId == Convert.ToInt32(userId)
                             select new
                             {
                                 Lesson = lesson.Lesson1,
@@ -239,7 +240,6 @@ namespace EnglishLearningApp.Controllers
             }
             ViewBag.Active = "6";
             return View(list);
-            //return RedirectToAction("Index");
         }
 
         public IActionResult Mark(IFormCollection iformCollection)

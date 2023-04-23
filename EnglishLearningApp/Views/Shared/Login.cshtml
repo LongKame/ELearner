@@ -43,7 +43,6 @@
                             <div class="form-inline">
                                 <input type="checkbox" name="remember" id="remember">
                                 <label for="remember" class="text-muted">Remember me</label>
-                                @*<a h*@ref="#" id="forgot" class="font-weight-bold">Forgot password?</a>
                             </div>
                             @if (exist != null)
                             {
@@ -52,14 +51,29 @@
                             <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
                         </form>
                     </div>
-                    <div class="mx-3 my-2 py-2 bordert">
-                        <div class="text-center py-3">
-                            <a href="/Home/Signingoogle" target="_blank" class="px-2">
-                                <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
-                                     alt="">
-                            </a>
-                        </div>
-                    </div>
+                    <button style="height:30px; width:200px;" onclick="openPopUp()">
+                        <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
+                             alt="">
+                    </button>
+                    <script>
+                        // function to open the popup window
+                        function openPopUp() {
+                            let url = "/Home/Signingoogle";
+                            let height = screen.height;
+                            let width = screen.width;
+                            var left = (screen.width - width) / 2;
+                            var top = (screen.height - height) / 2;
+                            var newWindow = window.open(url, "center window", 'resizable = yes, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left);
+                        }
+                    </script>
+                    @*<div class="mx-3 my-2 py-2 bordert">
+                            <div class="text-center py-3">
+                                <a href="/Home/Signingoogle" target="_blank" class="px-2">
+                                    <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png"
+                                         alt="">
+                                </a>
+                            </div>
+                        </div>*@
                 </div>
             </div>
         </div>
